@@ -2,8 +2,8 @@
 //  main.cpp
 //  LLTemplate
 //
-//  Created by James Shockey on 12/6/16.
-//  Copyright © 2016 James Shockey. All rights reserved.
+//  Created by Gabe Alvarez on 12/6/16.
+//  Copyright © 2016 Gabe Alvarez. All rights reserved.
 //
 
 #include <iostream>
@@ -57,7 +57,6 @@ int main()
     char cNum[10] ;
     Airport* airportArr[13500];
     int   airportCount;
-    //Airport* a[13500];
     
 	infile.open ("./USAirportCodes.csv", ifstream::in);
 
@@ -72,18 +71,6 @@ int main()
             airportArr[c]->longitude = atof(cNum);
             infile.getline(cNum, 256, '\n');
             airportArr[c]->latitude = atof(cNum);
-
-           /* if (!(c % 1000))
-                cout << airportArr[c]->code << " long: " << airportArr[c]->longitude << " lat: " << airportArr[c]->latitude <<  endl;
-
-            
-            if (!(c % 1000))
-            {
-                cout << airportArr[c]->code << " long: " << airportArr[c]->longitude << " lat: " << airportArr[c]->latitude <<  endl;
-                cout << airportArr[c+1]->code << endl; //" long: " << airportArr[c+1]->longitude << " lat: " << airportArr[c+1]->latitude <<  endl;                               
-            }
-            */
-
             
             i++ ;
             c++;
@@ -91,14 +78,6 @@ int main()
         airportCount = c-1;
         infile.close();
         
-         /*for (int c=0; c < airportCount; c++)
-            if (!(c % 1000))
-            {
-                cout << airportArr[c]->code << " long: " << airportArr[c]->longitude << " lat: " << airportArr[c]->latitude <<  endl;
-                cout << airportArr[c+1]->code << " long: " << airportArr[c+1]->longitude << " lat: " << airportArr[c+1]->latitude <<  endl;
-                cout <<"Distance between " << airportArr[c]->code << " and " << airportArr[c+1]->code << " is "
-                  << distanceEarth( airportArr[c]->longitude, airportArr[c]->latitude , airportArr[c+1]->longitude, airportArr[c+1]->latitude) << endl;
-            }*/
     }
     else
     {
@@ -132,22 +111,6 @@ int main()
       double farthestDis = distanceEarth(airportArr[0]->latitude, airportArr[0]->longitude, austin->latitude, austin->longitude);
 
       cout << "Farthest Airport: " << airportArr[0]->code << " distance: " << farthestDis << endl;
-
-   /*for(int i = 1000; i < 13423; i++)
-   {
-	   dis = distanceEarth(airportArr[i]->latitude, airportArr[i]->longitude, austin->latitude, austin->longitude);
-	   if (dis < 100)
-	   {
-		   cout << airportArr[i]->code << " " << dis << endl;
-	   }
-	   
-	   if(dis > farthestDis)
-	   {
-		   cout << "!";
-		   farthest = airportArr[i];
-		   farthestDis = dis;
-	   }
-   }*/
    
    bTree<Airport> x(2);
    for(int i = 0; i < 1000; i++)
