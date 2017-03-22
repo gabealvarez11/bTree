@@ -1,5 +1,5 @@
-#ifndef bTree_h
-#define bTree_h
+#ifndef BTREE_H
+#define BTREE_H
 #include <iostream>
 
 template <class T>
@@ -36,18 +36,8 @@ struct Node
 		while(i < numKeys && *x > *keys[i])
 			i++;
 		
-		//std::cout << "hey";
-		
-		//std::cout << *keys[i];
-		//std::cout << *x;
 		if(*keys[i]==*x)
 		{
-			/*Node<T> temp;
-			Node<T>* tempPoint;
-			tempPoint = &temp;
-			temp = this;
-			return tempPoint;*/
-			//std::cout << "this";
 			return this;
 		}
 		
@@ -65,17 +55,21 @@ struct Node
 		int i;
 		for(i = 0; i < numKeys; i++)
 		{
-			if(isLeaf == false)
+			if(children[i] != NULL)
 			{
-				children[i]->traverse();
+				if(isLeaf == false && children[i] != NULL)
+				{
+					children[i]->traverse();
+				}
+				
+				std::cout << *keys[i];
 			}
-			std::cout << *keys[i] << " ";
 		}
 		
-		if(isLeaf == false)
+		/*if(isLeaf == false && children[i] != NULL)
 		{
 			children[i]->traverse();
-		}
+		}*/
 	}
 	
 	void insertNonFull(T* x)
@@ -83,9 +77,7 @@ struct Node
 		int i = numKeys - 1;
 		
 		if(isLeaf == true)
-		{
-			//std::cout << "one";
-			
+		{			
 			while(i >= 0 && *keys[i] > *x)
 			{
 				keys[i+1] = keys[i];
@@ -98,15 +90,9 @@ struct Node
 		
 		else
 		{
-			//std::cout << "two";
-
 			while(i >= 0 && *keys[i] > *x)
 				i--;
 			
-			//std::cout << i;
-			
-			//std::cout << children[i+1] -> numKeys << " ";
-			//std::cout << 2*degree - 1;
 			if(children[i+1]->numKeys == 2*degree - 1)
 			{
 				splitChild(i + 1, children[i+1]);
@@ -115,16 +101,12 @@ struct Node
 					i++;
 			}
 			
-			//std::cout << "three";
-
 			children[i+1]->insertNonFull(x);
 		}
 	}
 	
 	void splitChild(int i, Node<T>* y)
-	{
-		//std::cout << "split";
-		
+	{		
 		Node<T>* z = new Node(y->degree, y->isLeaf);
 		z->numKeys = degree - 1;
 		
@@ -152,7 +134,6 @@ struct Node
 		numKeys++;
 	}
 	
-	//
 	void remove(T* x)
 	{		
 		if(keys == NULL)
@@ -208,5 +189,104 @@ class bTree
 		void deltree ();
 		~bTree();
 };
+
+template<typename T>
+bTree<T>::bTree(int t):
+	root(new Node<T>(t, true)), degree(t) {}
+
+template<typename T>
+void bTree<T>::insert(T* x)
+{
+	if(root->keys[0] == NULL)
+	{		
+		root = new Node<T>(degree, true);
+		root->keys[0] = x;
+		root->numKeys = 1;
+	}
+	
+	else
+	{
+		if(root->numKeys == 2*degree - 1)
+		{			
+			Node<T>* s = new Node<T>(degree, false);
+			s->children[0] = root;
+			s->splitChild(0, root);
+			
+			int i = 0;
+			if (*(s->keys[0]) < *x)
+				i++;
+			s->children[i]->insertNonFull(x);
+			
+			root = s;
+		}
+		
+		else
+		{	
+			root->insertNonFull(x);
+		}
+	}
+}
+
+template<typename T>
+Node<T>* bTree<T>::search(T* x)
+{
+	return root->search(x);
+}
+
+template<typename T>	
+void bTree<T>::remove(T* x)
+{
+	if(!root)
+	{
+		std::cout << "the tree is empty";
+		return;
+	}
+	
+	root->remove(x);
+	
+	if(root->numKeys == 0)
+	{
+		Node<T>* temp = root;
+		if(root -> isLeaf)
+			root = NULL;
+		else 
+			root = root->children[0];
+		delete(temp);
+	}
+	
+	return;
+}
+
+template<typename T>
+void bTree<T>::clear()
+{
+	Node<T>* tempNode = root;
+	Node<T>** tempKids = tempNode->children;
+	
+	for(int i = 0; i < 2*degree - 1; i++)
+	{
+		tempNode = tempKids[i];
+		delete tempNode;
+	}
+}
+	
+template<typename T>
+void bTree<T>::display()
+{
+	if(root != NULL)
+		root->traverse();
+}
+
+template<typename T>
+void bTree<T>::deltree()
+{
+	root = NULL;
+}
+
+template<typename T>
+bTree<T>::~bTree()
+{
+	deltree();
+}
 
 #endif

@@ -21,10 +21,31 @@ public:
     char    code[5];
     double   longitude;
     double   latitude;
-    
+	double disAustin;
+   
+	
+	friend ostream &operator<<( ostream &output, const Airport &D )
+	{ 
+         output << D.code << " " << D.longitude << " " << D.latitude << " " << D.disAustin << endl;
+         return output;            
+    }
+	
+	void print()
+	{
+		cout << code << " " << longitude << " " << latitude << " " << disAustin << endl;
+	}
+	
 };
 
+bool operator>(Airport a, Airport b)
+{
+	return (a.disAustin > b.disAustin) ? true : false;
+}
 
+bool operator<(Airport a, Airport b)
+{
+	return (a.disAustin < b.disAustin) ? true : false;
+}
 
 void simpleSort(Airport* aus, int airportCount, Airport* airportArr[]);
 double distanceEarth(double lat1d, double lon1d, double lat2d, double lon2d);
@@ -99,19 +120,20 @@ int main()
 	for(int z = 0; z < airportCount; z++)
 	{
 		a = airportArr[z];
-		output << "" << a->code << "," << a->latitude << "," << a->longitude << "," << distanceEarth(a->latitude, a->longitude, austin->latitude, austin->longitude) << "\n";
+		double distanceToAus = distanceEarth(a->latitude, a->longitude, austin->latitude, austin->longitude);
+		a->disAustin = distanceToAus;
+		output << "" << a->code << "," << a->latitude << "," << a->longitude << "," << distanceToAus << "\n";
 	}
    
    output.close();
    
-   //double farthestDis = 0;
-   double dis;
+    double dis;
    
       double farthestDis = distanceEarth(airportArr[0]->latitude, airportArr[0]->longitude, austin->latitude, austin->longitude);
 
       cout << "Farthest Airport: " << airportArr[0]->code << " distance: " << farthestDis << endl;
 
-   for(int i = 1000; i < 13423; i++)
+   /*for(int i = 1000; i < 13423; i++)
    {
 	   dis = distanceEarth(airportArr[i]->latitude, airportArr[i]->longitude, austin->latitude, austin->longitude);
 	   if (dis < 100)
@@ -125,13 +147,16 @@ int main()
 		   farthest = airportArr[i];
 		   farthestDis = dis;
 	   }
-   }
+   }*/
    
-   //implement bTree stuff!!!!!!!!!!!!!!!
+   bTree<Airport> x(2);
+   for(int i = 0; i < 1000; i++)
+   {
+	   x.insert(airportArr[i]);
+   }
 
+   x.display();
 }
-
-
 
 #define pi 3.14159265358979323846
 #define earthRadiusKm 6371.0
@@ -145,7 +170,6 @@ double deg2rad(double deg) {
 double rad2deg(double rad) {
   return (rad * 180 / pi);
 }
-
 
 /**
  * Returns the distance between two points on the Earth.

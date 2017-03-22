@@ -1,5 +1,5 @@
 #include <iostream>
-#include "bTree.h"
+//#include "bTree.h"
 
 using namespace std;
 
@@ -51,7 +51,7 @@ void bTree<T>::remove(T* x)
 {
 	if(!root)
 	{
-		std::cout << "the tree is empty";
+		std::cout << "The tree is empty.";
 		return;
 	}
 	
